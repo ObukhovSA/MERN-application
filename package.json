@@ -1,0 +1,22 @@
+{
+  "name": "mern-application",
+  "version": "1.0.0",
+  "description": "Fullstack app(NodeJS+React)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ObukhovSA/MERN-application.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ObukhovSA/MERN-application/issues"
+  },
+  "homepage": "https://github.com/ObukhovSA/MERN-application#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
