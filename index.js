@@ -4,7 +4,7 @@ const app = express();
 
 app.get('/', (req, res) => {
 
-    res.send('Priver barash:');
+    res.send('Priver basrash:');
 });
 
 app.listen(2222, (err) => {
