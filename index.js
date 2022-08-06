@@ -8,6 +8,7 @@ import { validationResult } from  'express-validator';
 import { registerValidation }  from './validations/auth.js';
 
 import UserModel from './models/User.js';
+import checkAuth from './utils/checkAuth.js';
 
 mongoose
     .connect('mongodb+srv://admin:admin@cluster0.iu5tnwj.mongodb.net/blog?retryWrites=true&w=majority',)
@@ -18,6 +19,7 @@ const app = express();
 
 // Логика express для чтения JSON запросов
 app.use(express.json());
+
 
 app.post('/auth/login', async (req, res) => {
     try {
@@ -106,10 +108,24 @@ app.post('/auth/register', registerValidation, async (req, res) => {
     }
 });
 
-app.get('/auth/me', (req, res) => {
+app.get('/auth/me', checkAuth, async (req, res) => {
     try {
+            const user = await UserModel.findById(req.userId);
+            if (!user) {
+                return res.status(404).json({
+                    message: 'Пользователь не найден'
+                });
+            }
+    const { passwordHash, ...userData } = user._doc;
 
-    } catch (err) {}
+    res.json(userData);
+
+    } catch (err) {
+        console.log(err);
+      res.status(500).json({
+        message: 'Нет доступа',
+      });
+    }
 });
 
 // Маршрутизация базового приложения
