@@ -16,9 +16,7 @@ app.use(express.json());
 
  // Запрос на авторизацию
 app.post('/auth/login', UserController.login);
-
 app.post('/auth/register', registerValidation, UserController.register) ;
-
 app.get('/auth/me', checkAuth, UserController.getMe);
 
 // Маршрутизация базового приложения
