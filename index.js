@@ -1,5 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import multer from 'multer';
+
 import { registerValidation, loginValidation, postCreateValidation }  from './validations.js';
 import checkAuth from './utils/checkAuth.js';
 
@@ -14,13 +16,31 @@ mongoose
 
 const app = express();
 
+const storage = multer.diskStorage({
+    destination: (_, __, cb) => {   // Сохранение загружаемых фалов в директорию uploads
+        cb(null, 'uploads');
+    },
+
+    filename: (_, file, cb) => {    // Название файла при загрузке
+        cb(null, file.originalname); 
+    },
+});
+
+const upload = multer({ storage });
+
 // Логика express для чтения JSON запросов
 app.use(express.json());
+app.use('/uploads', express.static('uploads')); // get запрос на получение статичного файла
 
- // Запрос на авторизацию
-app.post('/auth/login', loginValidation, UserController.login);
+app.post('/auth/login', loginValidation, UserController.login);  // Запрос на авторизацию
 app.post('/auth/register', registerValidation, UserController.register);
 app.get('/auth/me', checkAuth, UserController.getMe);
+
+app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
+    res.json({
+        url: '/uploads/${req.file.originalname}',               // Информация о загружаемом файле
+    });
+});
 
 app.get('/posts', PostController.getAll);
 app.get('/posts/:id', PostController.getOne);
